@@ -810,24 +810,57 @@
   const recBtn=document.getElementById('recBtn');
   const ICON_REC='<svg viewBox="0 0 24 24" fill="none"><path d="M12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="12" cy="12" r="5" fill="currentColor"/></svg>';
   const ICON_STOP='<svg viewBox="0 0 24 24" fill="currentColor"><rect x="7" y="7" width="10" height="10" rx="2"/></svg>';
-  let mediaRecorder=null, recChunks=[], recStream=null;
+  // hover popover: recording label + microphone-audio opt-in checkbox
+  const recPop=document.getElementById('recPop');
+  const recPopTitle=document.getElementById('recPopTitle');
+  const recAudioToggle=document.getElementById('recAudioToggle');
+  let recPopTimer;
+  function positionRecPop(){
+    const r=recBtn.getBoundingClientRect();
+    recPop.style.left=(r.left+r.width/2)+'px';
+    recPop.style.bottom=(window.innerHeight-r.top+10)+'px';   // sit just above the button
+  }
+  function showRecPop(){ clearTimeout(recPopTimer); positionRecPop(); recPop.classList.add('open'); }
+  function hideRecPop(){ recPopTimer=setTimeout(()=>recPop.classList.remove('open'),120); }  // small grace so you can move onto the popover
+  recBtn.addEventListener('mouseenter',showRecPop);
+  recBtn.addEventListener('mouseleave',hideRecPop);
+  recPop.addEventListener('mouseenter',()=>clearTimeout(recPopTimer));
+  recPop.addEventListener('mouseleave',hideRecPop);
+  window.addEventListener('resize',()=>{ if(recPop.classList.contains('open')) positionRecPop(); });
+
+  let mediaRecorder=null, recChunks=[], recStream=null, recMic=null;
   function recUI(on){
     recBtn.classList.toggle('is-rec',on);
     recBtn.setAttribute('aria-pressed',String(on));
-    recBtn.setAttribute('data-tip',on?'Stop & download':'Record');
     recBtn.innerHTML=on?ICON_STOP:ICON_REC;
+    recPopTitle.textContent=on?'Stop & download':'Record Presentation';
+    recAudioToggle.disabled=on;   // can't change the audio choice mid-recording
   }
   async function startRec(){
     if(!navigator.mediaDevices||!navigator.mediaDevices.getDisplayMedia||typeof MediaRecorder==='undefined'){
       alert('Screen recording is not supported in this browser.'); return;
     }
+    const wantAudio=recAudioToggle.checked;
     try{
       // selfBrowserSurface:'include' → Chrome hides the calling tab by default; this lets you pick this very tab
       recStream=await navigator.mediaDevices.getDisplayMedia({video:{frameRate:30},audio:false,selfBrowserSurface:'include',preferCurrentTab:true});
     }catch(e){ return; }   // user cancelled the picker
+    // when opted in, capture the microphone and mix its audio into the recording
+    recMic=null;
+    let tracks=recStream.getVideoTracks();
+    if(wantAudio){
+      try{
+        recMic=await navigator.mediaDevices.getUserMedia({audio:true});
+        tracks=tracks.concat(recMic.getAudioTracks());
+      }catch(e){ recMic=null; }   // mic denied/unavailable → fall back to video only
+    }
+    const recordStream=recMic ? new MediaStream(tracks) : recStream;
     recChunks=[];
-    const mime=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'].find(t=>MediaRecorder.isTypeSupported(t))||'video/webm';
-    mediaRecorder=new MediaRecorder(recStream,{mimeType:mime});
+    const candidates=wantAudio
+      ? ['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm']
+      : ['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'];
+    const mime=candidates.find(t=>MediaRecorder.isTypeSupported(t))||'video/webm';
+    mediaRecorder=new MediaRecorder(recordStream,{mimeType:mime});
     mediaRecorder.ondataavailable=e=>{ if(e.data&&e.data.size) recChunks.push(e.data); };
     mediaRecorder.onstop=()=>{
       const blob=new Blob(recChunks,{type:'video/webm'});
@@ -837,6 +870,7 @@
       document.body.appendChild(a); a.click(); a.remove();
       setTimeout(()=>URL.revokeObjectURL(url),2000);
       if(recStream){ recStream.getTracks().forEach(t=>t.stop()); recStream=null; }
+      if(recMic){ recMic.getTracks().forEach(t=>t.stop()); recMic=null; }
       mediaRecorder=null; recUI(false);
     };
     // user can also end sharing from the browser's own bar → stop the recorder
