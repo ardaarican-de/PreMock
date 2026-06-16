@@ -1308,7 +1308,8 @@
       alert('Screen recording is not supported in this browser.'); return;
     }
     try{
-      recStream=await navigator.mediaDevices.getDisplayMedia({video:{frameRate:30},audio:false});
+      // selfBrowserSurface:'include' → Chrome hides the calling tab by default; this lets you pick this very tab
+      recStream=await navigator.mediaDevices.getDisplayMedia({video:{frameRate:30},audio:false,selfBrowserSurface:'include',preferCurrentTab:true});
     }catch(e){ return; }   // user cancelled the picker
     recChunks=[];
     const mime=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'].find(t=>MediaRecorder.isTypeSupported(t))||'video/webm';
