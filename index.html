@@ -53,9 +53,9 @@
 
   /* ---------- SCENE ---------- */
   #scene{position:fixed;inset:0;z-index:0;transition:background .6s ease;background-size:cover;background-position:center;}
-  .scene-studio{background:#f4f5f4;}
-  .scene-living{background:#dfe3e1;}
-  .scene-desk{background:#9ea7a4;}
+  .scene-studio{background:#dfe3e1;}
+  .scene-living{background:#fed7aa;}
+  .scene-desk{background:#bfdbfe;}
 
   /* ---------- DEVICE UNIT ---------- */
   #deviceUnit{
@@ -204,9 +204,9 @@
   .swatch{width:38px;height:38px;border-radius:11px;cursor:pointer;border:1px solid transparent;padding:0;position:relative;transition:border-color .15s ease,box-shadow .15s ease;}
   .swatch:hover{box-shadow:inset 0 0 0 999px rgba(255,255,255,.18);}
   .swatch[aria-pressed="true"]{border-color:rgba(255,255,255,.65);}
-  .sw-studio{background:#f4f5f4;}
-  .sw-living{background:#dfe3e1;}
-  .sw-desk{background:#9ea7a4;}
+  .sw-studio{background:#dfe3e1;}
+  .sw-living{background:#fed7aa;}
+  .sw-desk{background:#bfdbfe;}
   .sw-studio[aria-pressed="true"]::before,
   .sw-living[aria-pressed="true"]::before,
   .sw-desk[aria-pressed="true"]::before{content:'';position:absolute;left:50%;top:50%;width:15px;height:15px;transform:translate(-50%,-50%);background:#1f1c19;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M4.25 13.5 8.75 18 19.75 6' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M4.25 13.5 8.75 18 19.75 6' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;z-index:1;}
@@ -265,7 +265,8 @@
   .btn-icon{width:38px;padding:0;justify-content:center;}
   .btn:disabled{opacity:.4;cursor:default;transform:none;}
   /* record button */
-  #recBtn svg{color:#e5484d;}
+  #recBtn svg{color:#fff;width:17px;height:17px;}
+  #recBtn.is-rec svg{color:#e5484d;width:20px;height:20px;}
   #recBtn.is-rec{background:rgba(229,72,77,.16);}
   #recBtn.is-rec:hover{background:rgba(229,72,77,.26);}
   #recBtn.is-rec svg{animation:recPulse 1.2s ease-in-out infinite;}
@@ -299,6 +300,9 @@
   .filepill .savebtn.done{background:#3fa564;color:#fff;}
   .filepill .savebtn.done:hover{background:#359158;}
   .filepill .savebtn.done svg{fill:#fff;}
+  .filepill .sharebtn[hidden]{display:none;}
+  .filepill .sharebtn.copied{background:#3fa564;color:#fff;}
+  .filepill .sharebtn.copied:hover{background:#359158;}
 
   .confirm-pop{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;background:rgba(10,10,12,.42);backdrop-filter:blur(3px);}
   .confirm-pop.open{display:flex;}
@@ -461,7 +465,7 @@
   <div class="intro-title">PreMock</div>
   <a class="intro-credit" href="https://www.thisisarda.com" target="_blank" rel="noopener noreferrer">Designed by <b>Arda Arıcan</b></a>
   <div class="brand ui-hidden"><b>PreMock</b><a class="credit" href="https://www.thisisarda.com" target="_blank" rel="noopener noreferrer">by <b>Arda Arıcan</b></a></div>
-  <div class="filepill" id="filepill"><span id="filename"></span><button class="savebtn" id="saveBtn" title="Save to gallery"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg></button></div>
+  <div class="filepill" id="filepill"><span id="filename"></span><button class="savebtn" id="saveBtn" title="Save to gallery"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg></button><button class="savebtn sharebtn" id="shareBtn" title="Copy share link" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg></button></div>
 
   <div class="confirm-pop" id="confirmPop" role="dialog" aria-modal="true">
     <div class="confirm-card">
@@ -491,9 +495,9 @@
 
   <div class="dock ui-hidden">
     <div class="scenes" id="scenes">
-      <button class="swatch sw-studio" data-scene="studio" aria-pressed="true" data-tip="Light Gray"></button>
-      <button class="swatch sw-living" data-scene="living" aria-pressed="false" data-tip="Soft Gray"></button>
-      <button class="swatch sw-desk" data-scene="desk" aria-pressed="false" data-tip="Dark Soft gray"></button>
+      <button class="swatch sw-studio" data-scene="studio" aria-pressed="true" data-tip="Soft Gray"></button>
+      <button class="swatch sw-living" data-scene="living" aria-pressed="false" data-tip="Apricot"></button>
+      <button class="swatch sw-desk" data-scene="desk" aria-pressed="false" data-tip="Sky Blue"></button>
       <button class="swatch sw-palette" data-scene="palette" aria-pressed="false" data-tip="Color Palette">
         <svg class="sw-ico-outline" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C12.8417 22 14 22.1163 14 21C14 20.391 13.6832 19.9212 13.3686 19.4544C12.9082 18.7715 12.4523 18.0953 13 17C13.6667 15.6667 14.7778 15.6667 16.4815 15.6667C17.3334 15.6667 18.3334 15.6667 19.5 15.5C21.601 15.1999 22 13.9084 22 12Z" stroke="currentColor"/><path d="M8.5 9C9.32843 9 10 8.32843 10 7.5C10 6.67157 9.32843 6 8.5 6C7.67157 6 7 6.67157 7 7.5C7 8.32843 7.67157 9 8.5 9Z" fill="currentColor"/><path d="M6.5 15C7.32843 15 8 14.3284 8 13.5C8 12.6716 7.32843 12 6.5 12C5.67157 12 5 12.6716 5 13.5C5 14.3284 5.67157 15 6.5 15Z" fill="currentColor"/><path d="M14.5 8C15.3284 8 16 7.32843 16 6.5C16 5.67157 15.3284 5 14.5 5C13.6716 5 13 5.67157 13 6.5C13 7.32843 13.6716 8 14.5 8Z" fill="currentColor"/><path d="M17.5 13C18.3284 13 19 12.3284 19 11.5C19 10.6716 18.3284 10 17.5 10C16.6716 10 16 10.6716 16 11.5C16 12.3284 16.6716 13 17.5 13Z" fill="currentColor"/></svg>
         <svg class="sw-ico-filled" viewBox="0 0 24 24" fill="none"><path d="M12 2C17.5228 2 22 6.47715 22 12C22 13.9084 21.601 15.1999 19.5 15.5C18.3334 15.6667 17.3333 15.667 16.4814 15.667C14.7778 15.667 13.6667 15.6667 13 17C12.4524 18.0951 12.9079 18.7713 13.3682 19.4541C13.6828 19.9209 14 20.391 14 21C14 22.1163 12.8417 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM6.5 12C5.67157 12 5 12.6716 5 13.5C5 14.3284 5.67157 15 6.5 15C7.32843 15 8 14.3284 8 13.5C8 12.6716 7.32843 12 6.5 12ZM17.5 10C16.6716 10 16 10.6716 16 11.5C16 12.3284 16.6716 13 17.5 13C18.3284 13 19 12.3284 19 11.5C19 10.6716 18.3284 10 17.5 10ZM8.5 6C7.67157 6 7 6.67157 7 7.5C7 8.32843 7.67157 9 8.5 9C9.32843 9 10 8.32843 10 7.5C10 6.67157 9.32843 6 8.5 6ZM14.5 5C13.6716 5 13 5.67157 13 6.5C13 7.32843 13.6716 8 14.5 8C15.3284 8 16 7.32843 16 6.5C16 5.67157 15.3284 5 14.5 5Z" fill="currentColor"/></svg>
@@ -504,14 +508,14 @@
       </button>
     </div>
     <div class="sep"></div>
-    <button class="btn btn-ghost btn-icon" id="fullBtn" data-tip="Present Mode" aria-pressed="false">
+    <button class="btn btn-ghost btn-icon" id="fullBtn" data-tip="Full Screen" aria-pressed="false">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M16 21h3a2 2 0 0 0 2-2v-3M8 21H5a2 2 0 0 1-2-2v-3"/></svg>
     </button>
     <button class="btn btn-ghost btn-icon" id="resetBtn" data-tip="Restart Prototype" disabled>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5121 15C4.7476 18.4956 8.0813 21 12 21C16.9706 21 21 16.9706 21 12C21 7.02943 16.9706 3 12 3C8.2708 3 5.0714 5.26806 3.7059 8.5"/><path d="M9 9H6C4.5858 9 3.8787 9 3.4393 8.56066C3 8.12132 3 7.41421 3 6V3"/></svg>
     </button>
     <button class="btn btn-ghost btn-icon" id="recBtn" data-tip="Record" aria-pressed="false">
-      <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="12" cy="12" r="5" fill="currentColor"/></svg>
     </button>
     <button class="btn btn-ghost" id="galleryBtn" title="Prototype gallery">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
@@ -784,14 +788,14 @@
     const cleanName=(name||'Prototype').replace(/\.html?$/i,'');
     current={type:'html',src:html,title:cleanName};
     if(name){filename.textContent=cleanName;filepill.classList.add('show');}
-    syncSaveBtn();
+    syncSaveBtn(); syncShareBtn();
   }
   function clearPhone(){
     frameLoader.classList.remove('show');
     frame.removeAttribute('srcdoc'); frame.src='about:blank';
     cursorShield.classList.remove('active');
     empty.classList.remove('hidden'); filepill.classList.remove('show');
-    resetBtn.disabled=true; current=null;
+    resetBtn.disabled=true; current=null; syncShareBtn();
   }
   function restartPrototype(){
     if(!current) return;                                  // reload the shown prototype, don't return to selection
@@ -949,21 +953,26 @@
     setSolidScene(colorBtn.dataset.color);
     closePalette();
   });
-  document.getElementById('scenes').addEventListener('click',e=>{
-    const b=e.target.closest('.swatch'); if(!b) return;
-    const name=b.dataset.scene;
-    // palette / custom are popover openers — they must not clear the active preset's tick
-    if(name==='custom'){bgPopover.classList.contains('open')?closeBg():openBg();return;}
-    if(name==='palette'){palettePopover.classList.contains('open')?closePalette():openPalette();return;}
+  // Apply one of the 3 preset scenes (studio/living/desk) and sync the swatch tick.
+  function setPresetScene(name){
+    if(!cls[name]) return;
     document.querySelectorAll('.swatch').forEach(s=>s.setAttribute('aria-pressed','false'));
-    b.setAttribute('aria-pressed','true');
+    const sw=document.querySelector('.sw-'+name); if(sw) sw.setAttribute('aria-pressed','true');
     closePalette(); closeBg();
     scene.style.backgroundImage='none'; scene.className=cls[name];
     scene.style.backgroundColor='';
     selectedBg=null; customSwatch.classList.remove('has-image');
     paletteSwatch.classList.remove('has-color');
     paletteActive=false; syncPaletteTicks();   // a preset is active → no palette tick
-    document.body.classList.toggle('dark',name==='desk');
+    document.body.classList.remove('dark');
+  }
+  document.getElementById('scenes').addEventListener('click',e=>{
+    const b=e.target.closest('.swatch'); if(!b) return;
+    const name=b.dataset.scene;
+    // palette / custom are popover openers — they must not clear the active preset's tick
+    if(name==='custom'){bgPopover.classList.contains('open')?closeBg():openBg();return;}
+    if(name==='palette'){palettePopover.classList.contains('open')?closePalette():openPalette();return;}
+    setPresetScene(name);
   });
   window.addEventListener('resize',()=>{
     if(palettePopover.classList.contains('open')) positionPalette();
@@ -1042,7 +1051,7 @@
     empty.classList.add('hidden'); resetBtn.disabled=false;
     current={type:'url',src:url,title:title||url};
     filename.textContent=title||url; filepill.classList.add('show');
-    syncSaveBtn();
+    syncSaveBtn(); syncShareBtn();
   }
 
   const sheet=document.getElementById('sheet');
@@ -1222,6 +1231,57 @@
     saveBtn.title = exists ? 'In gallery — click to remove' : 'Save to gallery';
   }
 
+  // ---- share link: reproduce the current Figma prototype + background + device on open ----
+  const shareBtn=document.getElementById('shareBtn');
+  // Share is only meaningful for Figma links (HTML pasted/uploaded prototypes aren't URL-addressable).
+  function syncShareBtn(){
+    shareBtn.hidden = !(current && current.type==='url' && !!figmaEmbedURL(current.src));
+  }
+  // Serialize the active background: solid color (c:), preset image (i:) or one of the 3 scenes (s:).
+  function getBgState(){
+    if(paletteActive) return 'c:'+selectedPaletteColor.replace(/^#/,'');
+    if(selectedBg) return 'i:'+selectedBg;
+    const m=(scene.className||'').match(/scene-(\w+)/);
+    return m ? 's:'+m[1] : 's:studio';
+  }
+  function applyBgState(s){
+    if(!s) return;
+    const v=s.slice(2);
+    if(s.indexOf('c:')===0){ setSolidScene(/^#/.test(v)?v:'#'+v); }
+    else if(s.indexOf('i:')===0){ const bg=presetBackgrounds.find(b=>b.src===v); applyBackground(v, bg?bg.dark!==false:true); }
+    else if(s.indexOf('s:')===0){ setPresetScene(v); }
+  }
+  function buildShareLink(){
+    const p=new URLSearchParams();
+    p.set('proto', current.src);
+    if(current.title) p.set('title', current.title);
+    p.set('device', currentDevice);
+    if(document.body.classList.contains('statusbar-on')) p.set('statusbar','1');
+    p.set('bg', getBgState());
+    return location.origin+location.pathname+'?'+p.toString();
+  }
+  const ICON_SHARE=shareBtn.innerHTML;
+  const ICON_CHECK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5 9 17 19.5 6.5"/></svg>';
+  let shareResetTimer;
+  shareBtn.addEventListener('click',async()=>{
+    if(!current) return;
+    const link=buildShareLink();
+    try{ await navigator.clipboard.writeText(link); }
+    catch(e){ const ta=document.createElement('textarea'); ta.value=link; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(_){} ta.remove(); }
+    shareBtn.classList.add('copied'); shareBtn.innerHTML=ICON_CHECK; shareBtn.title='Link copied!';
+    clearTimeout(shareResetTimer);
+    shareResetTimer=setTimeout(()=>{ shareBtn.classList.remove('copied'); shareBtn.innerHTML=ICON_SHARE; shareBtn.title='Copy share link'; },1600);
+  });
+  // Restore shared state on load (?proto=…): device → background → status bar → open prototype.
+  function applyShared(){
+    const q=new URLSearchParams(location.search);
+    const proto=q.get('proto'); if(!proto) return;
+    if(q.get('device')==='android') setDevice('android');
+    applyBgState(q.get('bg'));
+    if(q.get('statusbar')==='1'){ document.body.classList.add('statusbar-on'); statusBarToggle.setAttribute('aria-pressed','true'); }
+    showURL(proto, q.get('title')||undefined);
+  }
+
   // yes / no confirm popup
   const confirmPop=document.getElementById('confirmPop');
   const confirmMsg=document.getElementById('confirmMsg');
@@ -1284,6 +1344,7 @@
     const on=!!fsEl();
     document.body.classList.toggle('present',on);
     fullBtn.innerHTML=on?ICON_COMPRESS:ICON_EXPAND;
+    fullBtn.setAttribute('data-tip',on?'Exit Full Screen':'Full Screen');
     fullBtn.setAttribute('aria-pressed',String(on));
     if(on) armIdle();
     else { clearTimeout(idle); dock.classList.remove('idle'); }
@@ -1294,7 +1355,7 @@
 
   // screen recording — capture the tab/screen with MediaRecorder, download the clip on stop
   const recBtn=document.getElementById('recBtn');
-  const ICON_REC='<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg>';
+  const ICON_REC='<svg viewBox="0 0 24 24" fill="none"><path d="M12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="12" cy="12" r="5" fill="currentColor"/></svg>';
   const ICON_STOP='<svg viewBox="0 0 24 24" fill="currentColor"><rect x="7" y="7" width="10" height="10" rx="2"/></svg>';
   let mediaRecorder=null, recChunks=[], recStream=null;
   function recUI(on){
@@ -1332,6 +1393,9 @@
   }
   function stopRec(){ if(mediaRecorder && mediaRecorder.state!=='inactive') mediaRecorder.stop(); }
   recBtn.addEventListener('click',()=>{ (mediaRecorder && mediaRecorder.state==='recording') ? stopRec() : startRec(); });
+
+  // open a shared prototype (?proto=…) once everything is wired up
+  applyShared();
 })();
 </script>
 </body>
