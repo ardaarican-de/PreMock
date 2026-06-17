@@ -4,7 +4,7 @@
 
 PreMock drops your prototype into a realistic hand‑held phone mockup and turns it into an interactive, live presentation. Paste a Figma link or upload an AI‑generated HTML prototype, pick a backdrop, and present — or record the whole thing as a video.
 
-🔗 **Live:** [premock.co](https://www.premock.co/)
+🔗 **Live:** [premock.co](https://premock.co/)
 
 ---
 
@@ -33,8 +33,13 @@ No build step, no dependencies — just **vanilla HTML, CSS and JavaScript**.
 | [`styles.css`](styles.css) | All styling |
 | [`app.js`](app.js) | All behavior (device fitting, cursor, gallery, scenes, recording, sharing) |
 | `hand-ios.png` / `hand-and.png` | Device mockup images (transparent screen cutout) |
-| `Status Bar.png`, `home.png` | Status‑bar overlay and a sample background |
+| `bg-images/` | Ready‑made backdrop images (WebP) |
+| `og-image.png` | Social share preview (1200×630) |
+| `favicon.svg` | Dark‑mode aware favicon |
+| `robots.txt`, `sitemap.xml` | SEO |
 | `CNAME` | GitHub Pages custom domain (`premock.co`) |
+
+The iOS/Android status bar is drawn inline as SVG in `index.html` (no image asset).
 
 Hosted on **GitHub Pages**.
 

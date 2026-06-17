@@ -490,6 +490,8 @@
     setSolidScene(colorBtn.dataset.color);
     closePalette();
   });
+  // close when the cursor leaves the popover (same as the gallery sheet)
+  palettePopover.addEventListener('mouseleave',()=>{ if(palettePopover.classList.contains('open')) closePalette(); });
   // Apply one of the 3 preset scenes (studio/living/desk) and sync the swatch tick.
   function setPresetScene(name){
     if(!cls[name]) return;
@@ -538,8 +540,10 @@
   const bgPopover=document.getElementById('bgPopover');
   // Ready-made background images — add your own here ({src, dark}). dark:true uses light UI chrome over the image.
   const presetBackgrounds=[
-    { src:'home.png', dark:false },
-    { src:'office.png', dark:false },
+    { src:'bg-images/home.webp', dark:false },
+    { src:'bg-images/office.webp', dark:false },
+    { src:'bg-images/clothes_store.webp', dark:false },
+    { src:'bg-images/coffee_store.webp', dark:false },
   ];
   let selectedBg=null;
   function applyBackground(src,dark){
@@ -576,6 +580,8 @@
     applyBackground(tile.dataset.src, tile.dataset.dark!=='false');
     closeBg();
   });
+  // close when the cursor leaves the popover (same as the gallery sheet)
+  bgPopover.addEventListener('mouseleave',()=>{ if(bgPopover.classList.contains('open')) closeBg(); });
   // hovering a different dock button closes an open popover so its tooltip stays readable
   document.querySelector('.dock').addEventListener('mouseover',e=>{
     const btn=e.target.closest('button'); if(!btn) return;
@@ -750,6 +756,8 @@
   syncGalAdd();
   document.addEventListener('keydown',e=>{ if(e.key==='Escape' && sheet.classList.contains('open')) closeSheet(); });
   document.addEventListener('click',e=>{ if(sheet.classList.contains('open') && !sheet.contains(e.target) && !e.target.closest('#galleryBtn') && !e.target.closest('#guidePop')) closeSheet(); });
+  // close the gallery when the cursor leaves the sheet (but not while a confirm dialog is up)
+  sheet.addEventListener('mouseleave',()=>{ if(sheet.classList.contains('open') && !confirmPop.classList.contains('open')) closeSheet(); });
 
   // Fixed example prototype — shown in the gallery by default (before anything is saved).
   const DEFAULT_ITEMS=[
