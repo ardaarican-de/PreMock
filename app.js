@@ -904,17 +904,20 @@
   let shareResetTimer, shareIconTimer, nameW=0, labelW=0;
   shareBtn.addEventListener('click',async()=>{
     if(!current) return;
-    let id = current.shareId;
+    const mapping = {
+      proto: current.storagePath || current.src,
+      title: current.title,
+      device: currentDevice,
+      statusbar: document.body.classList.contains('statusbar-on'),
+      sbink: statusBarInk==='light' ? 'light' : statusBarInk==='dark' ? 'dark' : 'auto',
+      bg: getBgState()
+    };
+    // Re-save when the scene changed since the last share, so the copied link reflects the
+    // current device / backdrop / status-bar — a stale id would reopen the old look.
+    const sig = JSON.stringify(mapping);
+    let id = (current.shareId && current.shareSig === sig) ? current.shareId : null;
     if(!id && window.firebaseSaveShare){
-      const mapping = {
-        proto: current.storagePath || current.src,
-        title: current.title,
-        device: currentDevice,
-        statusbar: document.body.classList.contains('statusbar-on'),
-        sbink: statusBarInk==='light' ? 'light' : statusBarInk==='dark' ? 'dark' : 'auto',
-        bg: getBgState()
-      };
-      try{ id = await window.firebaseSaveShare(mapping); current.shareId = id; }
+      try{ id = await window.firebaseSaveShare(mapping); current.shareId = id; current.shareSig = sig; }
       catch(err){ console.error('Save share failed', err); }
     }
     // Query-string form (/?id) is served by index.html with a 200 + Open Graph tags, so social
