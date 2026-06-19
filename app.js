@@ -917,7 +917,10 @@
       try{ id = await window.firebaseSaveShare(mapping); current.shareId = id; }
       catch(err){ console.error('Save share failed', err); }
     }
-    const link = id ? location.origin+'/'+encodeURIComponent(id) : buildShareLink();
+    // Query-string form (/?id) is served by index.html with a 200 + Open Graph tags, so social
+    // previews render everywhere (a clean /id path would 404 on GitHub Pages, which some
+    // crawlers skip). Old /id links still resolve via the 404 bounce + path fallback below.
+    const link = id ? location.origin+'/?'+encodeURIComponent(id) : buildShareLink();
     // Lock the real pixel widths so the name collapses and the label expands over the FULL
     // duration in sync — animating max-width between content-sized values avoids the dead-zone
     // wobble (pill ballooning) you get when max-width travels far past the actual content width.
@@ -959,9 +962,15 @@
   // Restore shared state on load (?proto=…): device → background → status bar → open prototype.
   async function applyShared(){
     const q=new URLSearchParams(location.search);
-    // Clean share links live in the path (/1a). Fall back to the legacy ?id= form.
+    const rawQuery=location.search.slice(1);
+    // Resolve the share id across every link form we've shipped:
+    //  • new bare query   /?k7x2qa   (served by index.html → 200 + OG preview)
+    //  • old clean path   /k7x2qa    (restored from the 404 bounce before this runs)
+    //  • legacy form      /?id=k7x2qa
+    const bareQuery=(rawQuery && !rawQuery.includes('=') && !rawQuery.startsWith('/')) ? decodeURIComponent(rawQuery.split('&')[0]) : '';
     const pathSeg=location.pathname.replace(/^\/+/,'').split('/')[0];
-    const shareId=(pathSeg && pathSeg!=='index.html' && pathSeg!=='404.html') ? decodeURIComponent(pathSeg) : q.get('id');
+    const pathId=(pathSeg && pathSeg!=='index.html' && pathSeg!=='404.html') ? decodeURIComponent(pathSeg) : '';
+    const shareId=bareQuery || pathId || q.get('id') || '';
     let shareData;
     if(shareId){
       // firebase-init.js is a deferred module, so its helpers may not be attached yet when this
