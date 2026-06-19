@@ -947,6 +947,15 @@
     try{ await navigator.clipboard.writeText(link); }
     catch(e){ const ta=document.createElement('textarea'); ta.value=link; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(_){} ta.remove(); }
   });
+  // For a Firebase-hosted prototype, confirm the file is still there before opening the iframe —
+  // a deleted upload would otherwise render a broken frame. Range-request a single byte to keep it
+  // cheap, and fail open on network errors so a flaky connection never hides a working prototype.
+  async function protoFileMissing(url){
+    try{
+      const r=await fetch(url,{method:'GET',headers:{Range:'bytes=0-0'}});
+      return r.status===404 || r.status===403;
+    }catch(e){ return false; }
+  }
   // Restore shared state on load (?proto=…): device → background → status bar → open prototype.
   async function applyShared(){
     const q=new URLSearchParams(location.search);
@@ -954,14 +963,17 @@
     const pathSeg=location.pathname.replace(/^\/+/,'').split('/')[0];
     const shareId=(pathSeg && pathSeg!=='index.html' && pathSeg!=='404.html') ? decodeURIComponent(pathSeg) : q.get('id');
     let shareData;
-    // firebase-init.js is a deferred module, so its helpers may not be attached yet when this
-    // runs on first paint. Give it a brief window to load before falling back.
-    if(shareId && !window.firebaseLoadShare){
-      for(let i=0;i<50 && !window.firebaseLoadShare;i++) await new Promise(r=>setTimeout(r,40));
-    }
-    if(shareId && window.firebaseLoadShare){
+    if(shareId){
+      // firebase-init.js is a deferred module, so its helpers may not be attached yet when this
+      // runs on first paint. Give it a brief window to load before giving up.
+      if(!window.firebaseLoadShare){
+        for(let i=0;i<50 && !window.firebaseLoadShare;i++) await new Promise(r=>setTimeout(r,40));
+      }
+      // A shared link that can't be resolved (Firebase unreachable, or the mapping was
+      // removed) means the prototype is gone — land on the home screen with a notice.
+      if(!window.firebaseLoadShare){ showUnavailable(); return false; }
       try{ shareData = await window.firebaseLoadShare(shareId); }
-      catch(e){ console.warn('Share id not found', e); return false; }
+      catch(e){ console.warn('Shared prototype unavailable', e); showUnavailable(); return false; }
     } else {
       const protoKey=q.get('p'); if(!protoKey) return false;
       shareData = {
@@ -974,6 +986,8 @@
       };
     }
     const protoUrl = shareData.proto.startsWith('http') ? shareData.proto : (window.firebaseStoragePublicUrl ? window.firebaseStoragePublicUrl(shareData.proto) : shareData.proto);
+    // A Firebase-hosted upload that no longer exists → treat the link as unavailable.
+    if(!shareData.proto.startsWith('http') && await protoFileMissing(protoUrl)){ showUnavailable(); return false; }
     if(shareData.device==='android') setDevice('android');
     applyBgState(shareData.bg);
     if(shareData.statusbar){ document.body.classList.add('statusbar-on'); statusBarToggle.setAttribute('aria-pressed','true'); }
@@ -1002,6 +1016,17 @@
     confirmPop.classList.remove('open');
     if(confirmResolve){ confirmResolve(val); confirmResolve=null; }
   }
+  // "Prototype unavailable" notice — shown when a shared link can't be opened
+  const noticePop=document.getElementById('noticePop');
+  function closeNotice(){ noticePop.classList.remove('open'); }
+  function showUnavailable(){
+    // Drop the dead share id from the URL so a refresh starts clean and the home page shows.
+    history.replaceState(null, '', location.origin + '/');
+    noticePop.classList.add('open');
+  }
+  document.getElementById('noticeOk').addEventListener('click',closeNotice);
+  noticePop.addEventListener('click',e=>{ if(e.target===noticePop) closeNotice(); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape' && noticePop.classList.contains('open')) closeNotice(); });
   // Figma guide popup
   const guidePop=document.getElementById('guidePop');
   const openGuide=()=>guidePop.classList.add('open');

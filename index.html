@@ -29,8 +29,8 @@
 
 <!-- Primary SEO -->
 <title>PreMock — Present Figma & AI Prototypes Beautifully</title>
-<meta name="description" content="PreMock helps designers present their prototypes more impressively. Drop in a Figma link or upload AI-generated HTML prototypes (Claude, and more) and run interactive, live presentations.">
-<meta name="keywords" content="prototype presentation, Figma presentation, interactive prototype, design presentation tool, HTML prototype viewer, AI prototype, Claude design, present prototypes">
+<meta name="description" content="PreMock helps designers present and share their prototypes beautifully. Drop in a Figma link or upload AI-generated HTML prototypes (Claude, and more), present them live on a realistic phone, and share one short link that reopens the prototype — fully interactive — in the exact device, backdrop and status-bar setup you built it in.">
+<meta name="keywords" content="prototype presentation, share prototype link, interactive prototype sharing, Figma presentation, interactive prototype, design presentation tool, HTML prototype viewer, AI prototype, Claude design, present prototypes, shareable prototype link">
 <meta name="author" content="PreMock">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://premock.co/">
@@ -39,8 +39,8 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="PreMock">
 <meta property="og:url" content="https://premock.co/">
-<meta property="og:title" content="PreMock — Present Figma & AI Prototypes Beautifully">
-<meta property="og:description" content="Showcase your prototypes in stunning, interactive presentations. Bring in a Figma link or upload AI-generated HTML prototypes and present them live.">
+<meta property="og:title" content="PreMock — Present & Share Figma & AI Prototypes Beautifully">
+<meta property="og:description" content="Showcase your prototypes in stunning, interactive presentations — then share one short link that reopens them fully interactive, in the exact device and backdrop you built them in. Figma links and AI-generated HTML, presented live.">
 <meta property="og:image" content="https://premock.co/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -50,13 +50,35 @@
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="https://premock.co/">
-<meta name="twitter:title" content="PreMock — Present Figma & AI Prototypes Beautifully">
-<meta name="twitter:description" content="Showcase your prototypes in stunning, interactive presentations. Bring in a Figma link or upload AI-generated HTML prototypes and present them live.">
+<meta name="twitter:title" content="PreMock — Present & Share Figma & AI Prototypes Beautifully">
+<meta name="twitter:description" content="Showcase your prototypes in stunning, interactive presentations — then share one short link that reopens them fully interactive, in the exact device and backdrop you built them in. Figma links and AI-generated HTML, presented live.">
 <meta name="twitter:image" content="https://premock.co/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<!-- Structured data: helps search engines describe PreMock and its sharing feature -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "PreMock",
+  "url": "https://premock.co/",
+  "applicationCategory": "DesignApplication",
+  "operatingSystem": "Web",
+  "description": "Present and share Figma and AI-generated HTML prototypes beautifully. Run live, interactive presentations on a realistic phone, and share one short link that reopens the prototype — fully interactive — in the exact device, backdrop and status-bar setup you built it in.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": [
+    "Present Figma prototypes and AI-generated HTML on a realistic phone mockup",
+    "Share a short link that reopens your prototype fully interactive in the same environment",
+    "Restores device, backdrop and status-bar setup from the shared link",
+    "iOS and Android device frames with status bar overlay",
+    "Custom backdrops, color palette and uploaded background images",
+    "Full-screen presentation, screen recording and scene capture"
+  ],
+  "author": { "@type": "Person", "name": "Arda Arıcan", "url": "https://www.thisisarda.com" }
+}
+</script>
 </head>
 <body>
 
@@ -138,6 +160,19 @@
       <div class="confirm-actions">
         <button class="confirm-btn confirm-no" id="confirmNo" type="button">No</button>
         <button class="confirm-btn confirm-yes" id="confirmYes" type="button">Yes</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="confirm-pop notice-pop" id="noticePop" role="dialog" aria-modal="true" aria-label="Prototype unavailable">
+    <div class="confirm-card notice-card">
+      <div class="notice-ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v5"/><path d="M12 16.5h.01"/><circle cx="12" cy="12" r="9"/></svg>
+      </div>
+      <h3 class="notice-title">This prototype isn't available</h3>
+      <p class="notice-msg">The link may be broken, or the prototype has been removed. Ask whoever shared it for a fresh link — meanwhile, you can start your own here.</p>
+      <div class="confirm-actions">
+        <button class="confirm-btn confirm-yes" id="noticeOk" type="button">Start fresh</button>
       </div>
     </div>
   </div>

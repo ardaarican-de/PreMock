@@ -21,7 +21,7 @@ PreMock drops your prototype into a realistic hand‑held phone mockup and turns
 - **Presentation mode** — go fullscreen; the UI fades away while you present.
 - **Screen recording** — capture the presentation with `MediaRecorder` and download a `.webm`. Optional **microphone audio** via a checkbox in the record tooltip.
 - **Capture Scene** — grab a single clean frame of the scene as a `.png`. The whole UI (dock, menus, cursor) is hidden for the shot — only the backdrop, phone and the top‑left brand are captured. Reuses the live recording stream when one is running, so it won't prompt twice.
-- **Shareable links** — for Figma prototypes, copy a link that reproduces the prototype, device, backdrop and status‑bar state on open.
+- **Shareable links** — copy a short link (e.g. `premock.co/k7x2qa`) that reopens your prototype exactly as you set it up: the **device**, **backdrop** and **status‑bar** state are all restored. Works for both **Figma** links and **uploaded HTML** prototypes — uploaded files are stored on Firebase, so the recipient sees the live prototype, not just a URL. See [Sharing prototypes](#sharing-prototypes).
 - **Dark‑mode aware favicon.**
 
 ## Tech
@@ -33,6 +33,8 @@ No build step, no dependencies — just **vanilla HTML, CSS and JavaScript**.
 | [`index.html`](index.html) | Markup + Google Analytics + favicon |
 | [`styles.css`](styles.css) | All styling |
 | [`app.js`](app.js) | All behavior (device fitting, cursor, gallery, scenes, recording, capture, sharing) |
+| [`firebase-init.js`](firebase-init.js) | Firebase wiring — uploads HTML to Storage and saves/loads share links in Firestore |
+| [`404.html`](404.html) | GitHub Pages fallback that turns clean share links (`/k7x2qa`) into the app (see [Sharing prototypes](#sharing-prototypes)) |
 | [`example-prototype.js`](example-prototype.js) | Bundled demo prototype shown in the gallery by default (inlined so it works on `file://`) |
 | `hand-ios.png` / `hand-and.png` | Device mockup images (transparent screen cutout) |
 | `bg-images/` | Ready‑made backdrop images (WebP) |
@@ -81,6 +83,37 @@ For a Figma link to display correctly, in Figma:
 - In Present mode, enable **“Hide Figma UI”** (the link will include `hide-ui=1`).
 
 The in‑app guide (Gallery → *Follow the guide*) walks through the same steps.
+
+## Sharing prototypes
+
+PreMock lets you hand someone a single short link that opens your prototype in the exact
+environment you presented it in — same device frame, backdrop and status bar — and stays
+**fully interactive**. Whoever you send it to just clicks and explores; nothing to install.
+
+**How it works**
+
+1. Open any prototype (Figma link or uploaded HTML) and set up the device, backdrop and
+   status bar the way you like.
+2. Press the **share** button on the file pill (top‑right). PreMock saves the current setup
+   and copies a short link such as `https://premock.co/k7x2qa`.
+3. The recipient opens the link and lands on the same scene, ready to interact.
+
+**Under the hood**
+
+- **Uploaded HTML** is stored on **Firebase Storage** so the prototype itself travels with the
+  link — the viewer runs the real thing, not a screenshot.
+- Each share is a small record in **Cloud Firestore** holding the prototype reference plus the
+  device / backdrop / status‑bar choices, keyed by a **random 6‑character id** (non‑sequential,
+  so links can't be guessed or enumerated).
+- Links are **clean paths** (`/k7x2qa`) rather than long query strings. GitHub Pages has no
+  server‑side routing, so [`404.html`](404.html) bounces an unknown path to `/?/k7x2qa`, and a
+  small script in [`index.html`](index.html) restores the clean URL with `history.replaceState`.
+- If a link can't be resolved — the prototype was removed, or the id is wrong — PreMock opens
+  the home screen and shows a **“This prototype isn't available”** notice instead of a blank
+  frame.
+
+> Sharing needs Firebase configured (Storage + Firestore). Without it, uploads stay local and
+> the share button falls back to a long query‑string link for Figma prototypes only.
 
 ## Browser support
 

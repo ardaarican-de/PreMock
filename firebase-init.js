@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-storage.js";
-import { getFirestore, doc, setDoc, getDoc, runTransaction, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC_jn09EFvl45wP4oO1EKNKQ1VMxgkvgvs",
@@ -22,21 +22,25 @@ try {
   window.firebaseStoragePublicUrl = function(path){
     return 'https://firebasestorage.googleapis.com/v0/b/' + encodeURIComponent(firebaseConfig.storageBucket) + '/o/' + encodeURIComponent(path) + '?alt=media';
   };
+  // Random, non-sequential share ids so links can't be enumerated. 6 base36 chars
+  // (~2 billion combos); on the rare collision we just roll a new id and retry.
+  function randomShareId(len = 6){
+    const alphabet = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    const bytes = crypto.getRandomValues(new Uint8Array(len));
+    let out = '';
+    for(let i = 0; i < len; i++) out += alphabet[bytes[i] % alphabet.length];
+    return out;
+  }
   window.firebaseSaveShare = async function(data){
-    const counterRef = doc(firestore, 'shareMeta', 'counter');
-    const nextId = await runTransaction(firestore, async (tx) => {
-      const counterSnap = await tx.get(counterRef);
-      let next = 1;
-      if(counterSnap.exists()){
-        next = Number(counterSnap.data().next || 1);
-      }
-      tx.set(counterRef, {next: next + 1}, {merge:true});
-      return next;
-    });
-    const shareId = nextId.toString(36);
-    const mappingRef = doc(firestore, 'shareMappings', shareId);
-    await setDoc(mappingRef, {...data, createdAt: serverTimestamp()});
-    return shareId;
+    for(let attempt = 0; attempt < 5; attempt++){
+      const shareId = randomShareId();
+      const mappingRef = doc(firestore, 'shareMappings', shareId);
+      const snap = await getDoc(mappingRef);
+      if(snap.exists()) continue;                 // id already taken — try another
+      await setDoc(mappingRef, {...data, createdAt: serverTimestamp()});
+      return shareId;
+    }
+    throw new Error('Could not allocate a unique share id');
   };
   window.firebaseLoadShare = async function(shareId){
     const mappingRef = doc(firestore, 'shareMappings', shareId);
