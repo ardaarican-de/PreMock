@@ -1,11 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
-<title>premock</title>
+
+<!-- Social preview for shared links. GitHub Pages serves this 404 page for clean share
+     paths like /k7x2qa; social crawlers don't run the redirect below, so they read these
+     tags and show a branded PreMock preview instead of a broken/blank card. -->
+<title>A prototype shared with PreMock</title>
+<meta name="description" content="Open this interactive prototype on PreMock — presented live on a realistic phone, in the device and backdrop it was built in.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PreMock">
+<meta property="og:title" content="A prototype shared with PreMock">
+<meta property="og:description" content="Open this interactive prototype on PreMock — presented live on a realistic phone, in the device and backdrop it was built in.">
+<meta property="og:image" content="https://premock.co/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="PreMock — present & share prototypes beautifully">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="A prototype shared with PreMock">
+<meta name="twitter:description" content="Open this interactive prototype on PreMock — presented live on a realistic phone, in the device and backdrop it was built in.">
+<meta name="twitter:image" content="https://premock.co/og-image.png">
+
 <script>
-  // GitHub Pages has no server-side routing, so a clean share link like /1a returns this
-  // 404 page. Bounce it to /?/1a — index.html restores the clean path with replaceState.
+  // Clean share links (/k7x2qa) have no file on GitHub Pages, so the host serves this page.
+  // Real visitors get bounced to /?/k7x2qa, where index.html restores the clean path.
   (function(){
     var l = location;
     l.replace(l.protocol + '//' + l.host + '/?/' + l.pathname.slice(1) + l.hash);
