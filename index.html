@@ -160,7 +160,7 @@
     </svg>
     <span>This site is only available on desktop computers.</span>
   </div>
-  <div class="brand ui-hidden"><a class="brand-home" href="/" aria-label="Reload PreMock home"><b>PreMock<sup class="brand-ver">v1.2.0</sup></b></a><a class="credit" href="https://www.thisisarda.com" target="_blank" rel="noopener noreferrer">by <b>Arda Arıcan</b></a></div>
+  <div class="brand ui-hidden"><a class="brand-home" href="/" aria-label="Reload PreMock home"><b>PreMock<sup class="brand-ver">v1.2.1</sup></b></a><a class="credit" href="https://www.thisisarda.com" target="_blank" rel="noopener noreferrer">by <b>Arda Arıcan</b></a></div>
   <div class="filepill" id="filepill"><span id="filename"></span><button class="savebtn" id="saveBtn" data-tip="Save to gallery" aria-label="Save to gallery"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg></button><button class="savebtn sharebtn" id="shareBtn" data-tip="Share prototype" aria-label="Share prototype" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg></button><span class="copied-label">Copied link</span></div>
 
   <div class="confirm-pop" id="confirmPop" role="dialog" aria-modal="true">
@@ -292,15 +292,16 @@
 
   <div class="sheet" id="sheet">
     <h3>Prototype Gallery</h3>
-    <p class="hint">Add a Figma prototype link, or paste HTML code. Tap a preview to open it on the phone.</p>
+    <p class="hint">Add a Figma prototype, any website link, or paste HTML. Tap a preview to open it on the phone.</p>
     <button class="guide-link" id="guideLink" type="button">
       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 16V12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12.125 8.25H12M12.25 8.25C12.25 8.11193 12.1381 8 12 8C11.8619 8 11.75 8.11193 11.75 8.25C11.75 8.38807 11.8619 8.5 12 8.5C12.1381 8.5 12.25 8.38807 12.25 8.25Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <span>Follow the guide so Figma prototypes display correctly.</span>
     </button>
     <div class="addrow">
-      <input id="galInput" type="text" placeholder="Share link (https://...) or paste HTML" autocomplete="off">
+      <input id="galInput" type="text" placeholder="Figma link, website URL, or paste HTML" autocomplete="off">
       <button class="btn btn-primary" id="galAdd" disabled>Add</button>
     </div>
+    <div class="addhint" id="addHint" aria-live="polite"></div>
     <div class="grid" id="galGrid"></div>
     <div class="galempty" id="galEmpty">No prototypes yet. Paste a link above and press "Add".</div>
   </div>

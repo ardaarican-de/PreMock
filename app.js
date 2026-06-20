@@ -875,10 +875,25 @@
     input.addEventListener('keydown',e=>{ e.stopPropagation(); if(e.key==='Enter') commit(true); else if(e.key==='Escape') commit(false); });
     input.addEventListener('blur',()=>commit(true));
   }
+  const addHint=document.getElementById('addHint');
+  let addHintTimer;
+  function showAddHint(msg){
+    if(!addHint) return;
+    clearTimeout(addHintTimer);
+    addHint.textContent=msg||'';
+    addHint.classList.toggle('show',!!msg);
+    if(msg) addHintTimer=setTimeout(()=>addHint.classList.remove('show'),7000);
+  }
   function addFromInput(){
     const it=classify(galInput.value);
     if(!it){ galInput.style.borderColor='#e36a5b'; setTimeout(()=>galInput.style.borderColor='',1200); return; }
     items.unshift(it); galInput.value=''; syncGalAdd(); persist(); render(); refreshFigmaTitle(it);
+    // A normal website can refuse to be embedded (X-Frame-Options / CSP) and there's no
+    // reliable way to detect that up front, so gently flag it whenever a non-Figma site is added.
+    const isFigma=it.provider==='figma'||figmaEmbedURL(it.src);
+    showAddHint(it.type==='url' && !isFigma
+      ? 'Added. Some sites block embedding, so they may not appear on the phone — if so, the site doesn’t allow being framed.'
+      : '');
   }
   function syncSheet(){
     const dr=dock.getBoundingClientRect();
@@ -891,7 +906,7 @@
 
   document.getElementById('galleryBtn').addEventListener('click',()=>{ sheet.classList.contains('open')?closeSheet():openSheet(); });
   galAdd.addEventListener('click',addFromInput);
-  galInput.addEventListener('input',syncGalAdd);
+  galInput.addEventListener('input',()=>{ syncGalAdd(); showAddHint(''); });
   galInput.addEventListener('keydown',e=>{ if(e.key==='Enter') addFromInput(); });
   syncGalAdd();
   document.addEventListener('keydown',e=>{ if(e.key==='Escape' && sheet.classList.contains('open')) closeSheet(); });
