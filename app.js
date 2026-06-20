@@ -247,6 +247,15 @@
     document.querySelector('.right-dock').classList.remove('ui-hidden');
   },4800);
 
+  // Clicking the PreMock wordmark goes back to a fresh home screen — like re-entering the
+  // site. From a share link (/?id) it navigates home; on home it just refreshes.
+  const brandHome=document.querySelector('.brand-home');
+  if(brandHome) brandHome.addEventListener('click',e=>{
+    e.preventDefault();
+    const home=location.origin+'/';
+    (location.href===home) ? location.reload() : location.assign(home);
+  });
+
   let cursorActive=false;
   window.addEventListener("mousemove",e=>{ cursorActive=true; moveCursor(e.clientX,e.clientY); });
   let pressTimer;
